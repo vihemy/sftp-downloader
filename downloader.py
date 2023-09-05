@@ -3,18 +3,19 @@ import paramiko
 
 from utils import get_data_from_config
 
-# Server details
-hostname = get_data_from_config("silverlining", "hostname")
-port = get_data_from_config("silverlining", "port")
-username = get_data_from_config("silverlining", "username")
-password = get_data_from_config(
-    "silverlining", "password"
-)  # Or use key-based authentication
+provider = "epinion"  # "epinion" or "silverlining"
 
-# Paths
-remote_directory = "/"
-remote_filename = "Kattegatcentret.txt"
-local_directory = "C:/Users/vhm/OneDrive - Kattegatcentret/Økonomi og statistik/Analyser & undersøgelser/Silverlining"
+# Server details
+hostname = get_data_from_config(provider, "hostname")
+port = get_data_from_config(provider, "port")
+username = get_data_from_config(provider, "username")
+password = get_data_from_config(provider, "password")  # Or use key-based authentication
+
+# paths
+remote_directory = get_data_from_config(provider, "remote_directory")
+remote_filename = get_data_from_config(provider, "remote_filename")
+local_directory = get_data_from_config(provider, "local_directory")
+
 
 # Establish SSH/SFTP connection
 transport = paramiko.Transport(
