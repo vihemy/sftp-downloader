@@ -11,7 +11,7 @@ def get_data_from_config(section, config_key):
     ROOT_DIR = this_file.parent.absolute()
     config_path = os.path.join(ROOT_DIR, "config.ini")
     parser = ConfigParser()
-    parser.read(config_path)
+    parser.read(config_path, encoding="utf-8")
     data = parser.get(section, config_key)
     return data
 
