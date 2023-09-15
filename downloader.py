@@ -7,6 +7,7 @@ providers = ["epinion", "silverlining"]
 
 
 def get_all_files_in_dir():
+    """Download all files in a remote directory to the local machine."""
     for filename in sftp.listdir():
         remote_path = os.path.join(remote_directory, filename)
         local_path = os.path.join(local_directory, filename)
