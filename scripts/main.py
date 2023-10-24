@@ -6,16 +6,20 @@ providers = ["epinion", "silverlining"]
 
 
 def main():
-    for item in providers:
-        try:
-            provider = Provider(item)
-            downloader = Downloader(provider)
-            downloader.sftp_to_local()
-        except Exception as e:
-            msg = f"Error while downloading from {provider.name}: {e}"
-            print(msg)
-            reporter = Reporter(msg)
-            reporter.save_to_file()
-            
+    report: str = ""
+    for name in providers:
+        provider = Provider(name)
+        downloader = Downloader(provider)
+        report += downloader.sftp_to_local()
+    handle_reporting(report)
+
+
+def handle_reporting(report):
+    reporter = Reporter(report)
+    reporter.save_to_file()
+    if "Error" in report:
+        reporter.send_as_email()
+
+
 if __name__ == "__main__":
     main()

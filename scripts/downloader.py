@@ -19,11 +19,17 @@ class Downloader:
         self.provider = provider
 
     def sftp_to_local(self):
-        sftp, transport = self._establish_connection()
-        # Navigate to the remote directory
-        sftp.chdir(self.provider.remote_directory)
-        self._get_files_in_dir(sftp)
-        self._close_connection(sftp, transport)
+        try:
+            sftp, transport = self._establish_connection()
+            # Navigate to the remote directory
+            sftp.chdir(self.provider.remote_directory)
+            self._get_files_in_dir(sftp)
+            self._close_connection(sftp, transport)
+            msg = f"Successfully downloaded from {self.provider.name}.\n"
+        except Exception as e:
+            msg = f"Error downloading from {self.provider.name}. Error message: {e}\n"
+        finally:
+            return msg
 
     def _establish_connection(self):
         transport = Transport((self.provider.hostname, self.provider.port))
