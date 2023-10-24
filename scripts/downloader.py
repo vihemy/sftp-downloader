@@ -1,69 +1,52 @@
+# external libaries
 import os
 from paramiko import SFTPClient, Transport
 
-from utils import get_data_from_config
-
-providers = ["epinion", "silverlining"]
-
-
-def main():
-    for provider in providers:
-        sftp_to_local_folder(provider)
+# internal libaries
+from provider import Provider
 
 
-def sftp_to_local_folder(provider):
-    sftp, transport = establish_connection(provider)
+class Downloader:
+    """A class to download files from a given SFTP server to the local machine.
 
-    remote_directory = get_data_from_config(provider, "remote_directory")
-    local_directory = get_data_from_config(provider, "local_directory")
+    Attributes
+    ----------
+    provider : Provider
+        the provider from which the files should be downloaded from
+    """
 
-    # Navigate to the remote directory
-    sftp.chdir(remote_directory)
+    def __init__(self, provider: Provider):
+        self.provider = provider
 
-    get_all_files_in_dir(sftp, remote_directory, local_directory)
+    def sftp_to_local(self):
+        sftp, transport = self._establish_connection()
+        # Navigate to the remote directory
+        sftp.chdir(self.provider.remote_directory)
+        self._get_files_in_dir(sftp)
+        self._close_connection(sftp, transport)
 
-    close_connection(sftp, transport)
+    def _establish_connection(self):
+        transport = Transport((self.provider.hostname, self.provider.port))
+        transport.connect(
+            username=self.provider.username, password=self.provider.password
+        )  # Replace with key-based authentication if needed
 
+        sftp = SFTPClient.from_transport(transport)
 
-def establish_connection(provider):
-    # Server details
-    hostname = get_data_from_config(provider, "hostname")
-    port = int(get_data_from_config(provider, "port"))
-    username = get_data_from_config(provider, "username")
-    password = get_data_from_config(
-        provider, "password"
-    )  # Or use key-based authentication
+        return sftp, transport
 
-    # Establish SSH/SFTP connection
-    transport = Transport((hostname, port))
-    transport.connect(
-        username=username, password=password
-    )  # Replace with key-based authentication if needed
+    def _get_files_in_dir(self, sftp: SFTPClient):
+        """Download all files in a remote directory to the local machine."""
+        for filename in sftp.listdir():
+            remote_path = os.path.join(self.provider.remote_directory, filename)
+            local_path = os.path.join(self.provider.local_directory, filename)
+            self._get_file(sftp, remote_path, local_path)
 
-    sftp = SFTPClient.from_transport(transport)
+    def _get_file(self, sftp: SFTPClient, remote_path, local_path):
+        """Download a file from a remote server to the local machine."""
+        sftp.get(remote_path, local_path)
+        print(f"File downloaded from {remote_path} to {local_path}")
 
-    return sftp, transport
-
-
-def get_all_files_in_dir(sftp: SFTPClient, remote_directory, local_directory):
-    """Download all files in a remote directory to the local machine."""
-    for filename in sftp.listdir():
-        remote_path = os.path.join(remote_directory, filename)
-        local_path = os.path.join(local_directory, filename)
-        get_file(sftp, remote_path, local_path)
-
-
-def get_file(sftp: SFTPClient, remote_path, local_path):
-    """Download a file from a remote server to the local machine."""
-    sftp.get(remote_path, local_path)
-    print(f"File downloaded from {remote_path} to {local_path}")
-
-
-def close_connection(sftp: SFTPClient, transport: Transport):
-    # Close the SFTP connection
-    sftp.close()
-    transport.close()
-
-
-if __name__ == "__main__":
-    main()
+    def _close_connection(self, sftp: SFTPClient, transport: Transport):
+        sftp.close()
+        transport.close()
