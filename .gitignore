@@ -6,3 +6,23 @@ __pycache__/
 
 #ignore reports folder
 reports/
+considerations.md
+geckodriver.log
+Todos.md
+build/SFTPDownloader/Analysis-00.toc
+build/SFTPDownloader/base_library.zip
+build/SFTPDownloader/EXE-00.toc
+build/SFTPDownloader/PKG-00.toc
+build/SFTPDownloader/PYZ-00.pyz
+build/SFTPDownloader/PYZ-00.toc
+build/SFTPDownloader/SFTPDownloader.exe.manifest
+build/SFTPDownloader/SFTPDownloader.pkg
+build/SFTPDownloader/warn-SFTPDownloader.txt
+build/SFTPDownloader/xref-SFTPDownloader.html
+build/SFTPDownloader/localpycs/pyimod01_archive.pyc
+build/SFTPDownloader/localpycs/pyimod02_importers.pyc
+build/SFTPDownloader/localpycs/pyimod03_ctypes.pyc
+build/SFTPDownloader/localpycs/pyimod04_pywin32.pyc
+build/SFTPDownloader/localpycs/struct.pyc
+dist/SFTPDownloader.exe
+scripts/SFTPDownloader.spec
