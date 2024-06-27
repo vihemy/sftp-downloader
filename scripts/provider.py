@@ -30,4 +30,4 @@ class Provider:
             self.name, "password"
         )  # Or use key-based authentication
         self.remote_directory = get_data_from_config(self.name, "remote_directory")
-        self.local_directory = get_data_from_config(self.name, "local_directory")
+        self.local_directory = get_data_from_config(self.name, "local_directory", True)

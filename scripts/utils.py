@@ -8,9 +8,9 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 
-def get_data_from_config(section: str, key: str):
+def get_data_from_config(section: str, key: str, uses_environ_var: bool = False):
     config_path = _get_config_path()
-    data = _parse_config_file(config_path, section, key)
+    data = _parse_config_file(config_path, section, key, uses_environ_var)
     return data
 
 
@@ -21,11 +21,16 @@ def _get_config_path():
     return config_path
 
 
-def _parse_config_file(config_path, section: str, key: str):
+def _parse_config_file(
+    config_path, section: str, key: str, uses_environ_var: bool = False
+):
     """Return a ConfigParser instance with the config.ini file parsed."""
     parser = ConfigParser()
     parser.read(config_path, encoding="utf-8")
-    data = parser.get(section, key)
+    if uses_environ_var:
+        data = parser.get(section, key, vars=os.environ)
+    else:
+        data = parser.get(section, key)
     return data
 
 
