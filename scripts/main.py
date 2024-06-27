@@ -15,6 +15,7 @@ def main():
 
 
 def handle_reporting(report):
+    print(report)
     reporter = Reporter(report)
     reporter.save_to_file()
     if "Error" in report:
