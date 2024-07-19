@@ -2,7 +2,8 @@ from provider import Provider
 from downloader import Downloader
 from reporter import Reporter
 
-providers = ["epinion", "silverlining"]
+providers = ["epinion"]
+# earlier providers = ["epinion", "silverlining"]
 
 
 def main():
